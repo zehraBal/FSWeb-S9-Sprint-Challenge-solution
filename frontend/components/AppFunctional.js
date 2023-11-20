@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import axios from "axios";
 // önerilen başlangıç stateleri
 const initialMessage = "";
 const initialEmail = "";
@@ -95,10 +95,28 @@ export default function AppFunctional(props) {
 
   function onChange(evt) {
     // inputun değerini güncellemek için bunu kullanabilirsiniz
+    setEmail(evt.target.value);
   }
 
   function onSubmit(evt) {
+    evt.preventDefault();
     // payloadu POST etmek için bir submit handlera da ihtiyacınız var.
+    axios
+      .post("http://localhost:9000/api/result", {
+        x: getXY()[1],
+        y: getXY()[4],
+        steps: steps,
+        email: email,
+      })
+      .then(function (response) {
+        console.log(response);
+        setMessage(response.data.message);
+        setEmail(initialEmail);
+      })
+      .catch(function (error) {
+        console.log(error);
+        setMessage(error.response.data.message);
+      });
   }
 
   return (
@@ -110,7 +128,7 @@ export default function AppFunctional(props) {
       <div id="grid">
         {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
           <div key={idx} className={`square${idx === index ? " active" : ""}`}>
-            {idx === index ? "B" : null} {idx}
+            {idx === index ? "B" : null}
           </div>
         ))}
       </div>
@@ -132,8 +150,14 @@ export default function AppFunctional(props) {
         </button>
         <button id="reset">reset</button>
       </div>
-      <form>
-        <input id="email" type="email" placeholder="email girin"></input>
+      <form onSubmit={onSubmit}>
+        <input
+          value={email}
+          onChange={onChange}
+          id="email"
+          type="email"
+          placeholder="email girin"
+        ></input>
         <input id="submit" type="submit"></input>
       </form>
     </div>
