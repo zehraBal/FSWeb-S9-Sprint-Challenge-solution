@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useState } from "react";
 
 // önerilen başlangıç stateleri
-const initialMessage = ''
-const initialEmail = ''
-const initialSteps = 0
-const initialIndex = 4 //  "B" nin bulunduğu indexi
+const initialMessage = "";
+const initialEmail = "";
+const initialSteps = 0;
+const initialIndex = 4; //  "B" nin bulunduğu indexi
 
 export default function AppFunctional(props) {
+  const [index, setIndex] = useState(initialIndex);
   // AŞAĞIDAKİ HELPERLAR SADECE ÖNERİDİR.
   // Bunları silip kendi mantığınızla sıfırdan geliştirebilirsiniz.
 
@@ -34,6 +35,44 @@ export default function AppFunctional(props) {
   function ilerle(evt) {
     // Bu event handler, "B" için yeni bir dizin elde etmek üzere yukarıdaki yardımcıyı kullanabilir,
     // ve buna göre state i değiştirir.
+    console.log("ilerle", evt.target.id);
+
+    switch (evt.target.id) {
+      case "up":
+        if (index < 3) {
+          // yukarı gitme
+          break;
+        }
+        // yukarı git
+        setIndex(index - 3);
+        break;
+      case "down":
+        if (index >= 6) {
+          // yukarı gitme
+          break;
+        }
+        // aşağı git
+        setIndex(index + 3);
+        break;
+      case "left":
+        if (index % 3 === 0) {
+          // yukarı gitme
+          break;
+        }
+        // sola git
+        setIndex(index - 1);
+        break;
+      case "right":
+        if (index % 3 === 2) {
+          // yukarı gitme
+          break;
+        }
+        // sağa git
+        setIndex(index + 1);
+        break;
+      default:
+        break;
+    }
   }
 
   function onChange(evt) {
@@ -51,22 +90,28 @@ export default function AppFunctional(props) {
         <h3 id="steps">0 kere ilerlediniz</h3>
       </div>
       <div id="grid">
-        {
-          [0, 1, 2, 3, 4, 5, 6, 7, 8].map(idx => (
-            <div key={idx} className={`square${idx === 4 ? ' active' : ''}`}>
-              {idx === 4 ? 'B' : null}
-            </div>
-          ))
-        }
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
+          <div key={idx} className={`square${idx === index ? " active" : ""}`}>
+            {idx === index ? "B" : null} {idx}
+          </div>
+        ))}
       </div>
       <div className="info">
         <h3 id="message"></h3>
       </div>
       <div id="keypad">
-        <button id="left">SOL</button>
-        <button id="up">YUKARI</button>
-        <button id="right">SAĞ</button>
-        <button id="down">AŞAĞI</button>
+        <button onClick={ilerle} id="left">
+          SOL
+        </button>
+        <button onClick={ilerle} id="up">
+          YUKARI
+        </button>
+        <button onClick={ilerle} id="right">
+          SAĞ
+        </button>
+        <button onClick={ilerle} id="down">
+          AŞAĞI
+        </button>
         <button id="reset">reset</button>
       </div>
       <form>
@@ -74,5 +119,5 @@ export default function AppFunctional(props) {
         <input id="submit" type="submit"></input>
       </form>
     </div>
-  )
+  );
 }
