@@ -9,6 +9,8 @@ const initialIndex = 4; //  "B" nin bulunduğu indexi
 export default function AppFunctional(props) {
   const [index, setIndex] = useState(initialIndex);
   const [message, setMessage] = useState(initialMessage);
+  const [email, setEmail] = useState(initialEmail);
+  const [steps, setSteps] = useState(initialSteps);
   // AŞAĞIDAKİ HELPERLAR SADECE ÖNERİDİR.
   // Bunları silip kendi mantığınızla sıfırdan geliştirebilirsiniz.
 
@@ -28,8 +30,10 @@ export default function AppFunctional(props) {
   }
 
   function sonrakiIndex(targetIndex) {
+    // sadece gidebiliyorsam çalışıyor
     setIndex(targetIndex);
     setMessage(initialMessage);
+    setSteps(steps + 1);
   }
 
   function ilerle(evt) {
@@ -89,7 +93,7 @@ export default function AppFunctional(props) {
     <div id="wrapper" className={props.className}>
       <div className="info">
         <h3 id="coordinates">Koordinatlar (2, 2)</h3>
-        <h3 id="steps">0 kere ilerlediniz</h3>
+        <h3 id="steps">{steps} kere ilerlediniz</h3>
       </div>
       <div id="grid">
         {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
