@@ -15,6 +15,18 @@ export default function AppFunctional(props) {
   // Bunları silip kendi mantığınızla sıfırdan geliştirebilirsiniz.
 
   function getXY() {
+    const coordinates = [
+      "(1, 1)",
+      "(2, 1)",
+      "(3, 1)",
+      "(1, 2)",
+      "(2, 2)",
+      "(3, 2)",
+      "(1, 3)",
+      "(2, 3)",
+      "(3, 3)",
+    ];
+    return coordinates[index];
     // Koordinatları izlemek için bir state e sahip olmak gerekli değildir.
     // Bunları hesaplayabilmek için "B" nin hangi indexte olduğunu bilmek yeterlidir.
   }
@@ -92,7 +104,7 @@ export default function AppFunctional(props) {
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
-        <h3 id="coordinates">Koordinatlar (2, 2)</h3>
+        <h3 id="coordinates">Koordinatlar {getXY()}</h3>
         <h3 id="steps">{steps} kere ilerlediniz</h3>
       </div>
       <div id="grid">
