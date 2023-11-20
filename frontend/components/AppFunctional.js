@@ -8,6 +8,7 @@ const initialIndex = 4; //  "B" nin bulunduğu indexi
 
 export default function AppFunctional(props) {
   const [index, setIndex] = useState(initialIndex);
+  const [message, setMessage] = useState(initialMessage);
   // AŞAĞIDAKİ HELPERLAR SADECE ÖNERİDİR.
   // Bunları silip kendi mantığınızla sıfırdan geliştirebilirsiniz.
 
@@ -26,49 +27,50 @@ export default function AppFunctional(props) {
     // Tüm stateleri başlangıç ​​değerlerine sıfırlamak için bu helperı kullanın.
   }
 
-  function sonrakiIndex(yon) {
-    // Bu helper bir yön ("sol", "yukarı", vb.) alır ve "B" nin bir sonraki indeksinin ne olduğunu hesaplar.
-    // Gridin kenarına ulaşıldığında başka gidecek yer olmadığı için,
-    // şu anki indeksi değiştirmemeli.
+  function sonrakiIndex(targetIndex) {
+    setIndex(targetIndex);
+    setMessage(initialMessage);
   }
 
   function ilerle(evt) {
-    // Bu event handler, "B" için yeni bir dizin elde etmek üzere yukarıdaki yardımcıyı kullanabilir,
-    // ve buna göre state i değiştirir.
     console.log("ilerle", evt.target.id);
 
     switch (evt.target.id) {
       case "up":
         if (index < 3) {
           // yukarı gitme
+          setMessage("Yukarıya gidemezsiniz");
           break;
         }
         // yukarı git
-        setIndex(index - 3);
+        sonrakiIndex(index - 3);
         break;
       case "down":
         if (index >= 6) {
           // yukarı gitme
+          setMessage("Aşağıya gidemezsiniz");
           break;
         }
         // aşağı git
-        setIndex(index + 3);
+        sonrakiIndex(index + 3);
         break;
       case "left":
         if (index % 3 === 0) {
-          // yukarı gitme
+          setMessage("Sola gidemezsiniz");
+          // Sola gitme
           break;
         }
         // sola git
-        setIndex(index - 1);
+        sonrakiIndex(index - 1);
         break;
       case "right":
         if (index % 3 === 2) {
-          // yukarı gitme
+          // Sağa gitme
+          setMessage("Sağa gidemezsiniz");
           break;
         }
         // sağa git
-        setIndex(index + 1);
+        sonrakiIndex(index + 1);
         break;
       default:
         break;
@@ -97,7 +99,7 @@ export default function AppFunctional(props) {
         ))}
       </div>
       <div className="info">
-        <h3 id="message"></h3>
+        <h3 id="message">{message}</h3>
       </div>
       <div id="keypad">
         <button onClick={ilerle} id="left">
