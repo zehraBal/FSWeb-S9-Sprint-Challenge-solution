@@ -39,6 +39,10 @@ export default function AppFunctional(props) {
 
   function reset() {
     // Tüm stateleri başlangıç ​​değerlerine sıfırlamak için bu helperı kullanın.
+    setIndex(initialIndex);
+    setMessage(initialMessage);
+    setEmail(initialEmail);
+    setSteps(initialSteps);
   }
 
   function sonrakiIndex(targetIndex) {
@@ -111,12 +115,12 @@ export default function AppFunctional(props) {
       .then(function (response) {
         console.log(response);
         setMessage(response.data.message);
-        setEmail(initialEmail);
       })
       .catch(function (error) {
         console.log(error);
         setMessage(error.response.data.message);
       });
+    setEmail(initialEmail);
   }
 
   return (
@@ -148,7 +152,9 @@ export default function AppFunctional(props) {
         <button onClick={ilerle} id="down">
           AŞAĞI
         </button>
-        <button id="reset">reset</button>
+        <button onClick={reset} id="reset">
+          reset
+        </button>
       </div>
       <form onSubmit={onSubmit}>
         <input
