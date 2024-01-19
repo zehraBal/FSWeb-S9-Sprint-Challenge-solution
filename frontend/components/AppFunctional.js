@@ -15,18 +15,9 @@ export default function AppFunctional(props) {
   // Bunları silip kendi mantığınızla sıfırdan geliştirebilirsiniz.
 
   function getXY() {
-    const coordinates = [
-      "(1, 1)",
-      "(2, 1)",
-      "(3, 1)",
-      "(1, 2)",
-      "(2, 2)",
-      "(3, 2)",
-      "(1, 3)",
-      "(2, 3)",
-      "(3, 3)",
-    ];
-    return coordinates[index];
+    const coordinates = [(index % 3) + 1, Math.floor(index / 3) + 1];
+    return coordinates;
+
     // Koordinatları izlemek için bir state e sahip olmak gerekli değildir.
     // Bunları hesaplayabilmek için "B" nin hangi indexte olduğunu bilmek yeterlidir.
   }
@@ -35,10 +26,12 @@ export default function AppFunctional(props) {
     // Kullanıcı için "Koordinatlar (2, 2)" mesajını izlemek için bir state'in olması gerekli değildir.
     // Koordinatları almak için yukarıdaki "getXY" helperını ve ardından "getXYMesaj"ı kullanabilirsiniz.
     // tamamen oluşturulmuş stringi döndürür.
+    return `Koordinatlar (${getXY()[0]}, ${getXY()[1]})`;
   }
 
   function reset() {
     // Tüm stateleri başlangıç ​​değerlerine sıfırlamak için bu helperı kullanın.
+    console.log("reset");
     setIndex(initialIndex);
     setMessage(initialMessage);
     setEmail(initialEmail);
@@ -46,69 +39,64 @@ export default function AppFunctional(props) {
   }
 
   function sonrakiIndex(targetIndex) {
-    // sadece gidebiliyorsam çalışıyor
     setIndex(targetIndex);
-    setMessage(initialMessage);
     setSteps(steps + 1);
+    setMessage(initialMessage);
   }
 
   function ilerle(evt) {
-    console.log("ilerle", evt.target.id);
-
-    switch (evt.target.id) {
-      case "up":
-        if (index < 3) {
-          // yukarı gitme
-          setMessage("Yukarıya gidemezsiniz");
-          break;
-        }
-        // yukarı git
-        sonrakiIndex(index - 3);
-        break;
-      case "down":
-        if (index >= 6) {
-          // yukarı gitme
-          setMessage("Aşağıya gidemezsiniz");
-          break;
-        }
-        // aşağı git
-        sonrakiIndex(index + 3);
-        break;
+    const yon = evt.target.id;
+    console.log("ilerle", yon);
+    // Bu event handler, "B" için yeni bir dizin elde etmek üzere yukarıdaki yardımcıyı kullanabilir,
+    switch (yon) {
       case "left":
         if (index % 3 === 0) {
           setMessage("Sola gidemezsiniz");
-          // Sola gitme
-          break;
+        } else {
+          sonrakiIndex(index - 1);
         }
-        // sola git
-        sonrakiIndex(index - 1);
+        break;
+      case "up":
+        if (index < 3) {
+          setMessage("Yukarıya gidemezsiniz");
+        } else {
+          sonrakiIndex(index - 3);
+        }
         break;
       case "right":
         if (index % 3 === 2) {
-          // Sağa gitme
           setMessage("Sağa gidemezsiniz");
-          break;
+        } else {
+          sonrakiIndex(index + 1);
         }
-        // sağa git
-        sonrakiIndex(index + 1);
+        break;
+      case "down":
+        if (index > 5) {
+          setMessage("Aşağıya gidemezsiniz");
+        } else {
+          sonrakiIndex(index + 3);
+        }
         break;
       default:
         break;
+      // ve buna göre state i değiştirir.
     }
   }
 
-  function onChange(evt) {
+  function onChangeHandler(evt) {
     // inputun değerini güncellemek için bunu kullanabilirsiniz
     setEmail(evt.target.value);
   }
 
-  function onSubmit(evt) {
+  function onSubmitHandler(evt) {
     evt.preventDefault();
     // payloadu POST etmek için bir submit handlera da ihtiyacınız var.
+    console.log("submit");
+
     axios
       .post("http://localhost:9000/api/result", {
-        x: getXY()[1],
-        y: getXY()[4],
+        x: getXY()[0],
+        y: getXY()[1],
         steps: steps,
         email: email,
       })
@@ -118,15 +106,16 @@ export default function AppFunctional(props) {
       })
       .catch(function (error) {
         console.log(error);
-        setMessage(error.response.data?.message);
+        setMessage(error.response.data.message);
       });
+
     setEmail(initialEmail);
   }
 
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
-        <h3 id="coordinates">Koordinatlar {getXY()}</h3>
+        <h3 id="coordinates">{getXYMesaj()}</h3>
         <h3 id="steps">{steps} kere ilerlediniz</h3>
       </div>
       <div id="grid">
@@ -156,13 +145,13 @@ export default function AppFunctional(props) {
           reset
         </button>
       </div>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmitHandler}>
         <input
           value={email}
-          onChange={onChange}
           id="email"
           type="email"
           placeholder="email girin"
+          onChange={onChangeHandler}
         ></input>
         <input id="submit" type="submit"></input>
       </form>
